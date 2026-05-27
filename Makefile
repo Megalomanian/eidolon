@@ -2,10 +2,10 @@
         up down shell test test-all clean prune \
         push pull verify sbom
 
-COMPOSE      := docker compose
+COMPOSE      := docker-compose
 COMPOSE_BUILD:= EIDOLON_IMAGE_TAG=local EIDOLON_IMAGE_PREFIX=eidolon $(COMPOSE)
 REGISTRY     := ghcr.io
-IMAGE_OWNER  := hacktivesec
+IMAGE_OWNER  := Megalomanian
 TAG          := $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 
 help: ## Show this help

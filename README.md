@@ -70,9 +70,9 @@ echo 'DEEPSEEK_API_KEY=sk-your-key-here' > .env
 # 用脚本一键启动（自动加载 .env）
 ./eidolon-claude.sh
 
-# 或者用 docker compose
-docker compose up -d claude
-docker compose exec claude bash
+# 或者用 docker-compose
+docker-compose up -d claude
+docker-compose exec claude bash
 ```
 
 进入容器后，你会看到终端提示符带有 `[eidolon-claude]` 标签。AI 已经就绪——所有 Claude Code 权限已配好，模型后端走 DeepSeek。
@@ -95,13 +95,13 @@ AI 会自己调用 container 里的工具，读输出，分析结果，引导你
 
 ```bash
 # Web 渗透 + AI
-docker compose up -d web
-docker compose exec web bash
+docker-compose up -d web
+docker-compose exec web bash
 # 对 AI 说：sqlmap 发现注入点，接下来怎么办？
 
 # AD 渗透 + AI
-docker compose up -d ad
-docker compose exec ad bash
+docker-compose up -d ad
+docker-compose exec ad bash
 # 对 AI 说：分析 BloodHound 输出，部署 SMB 中继
 ```
 
