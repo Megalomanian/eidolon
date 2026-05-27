@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-ARG GHOSTWIRE_BASE=ghostwire-base:dev
+ARG EIDOLON_BASE=eidolon-base:dev
 
 # ---- Stage 0: compile Go tools ----
 FROM golang:1.26-bookworm AS gobuilder
@@ -22,12 +22,12 @@ RUN set -eux; \
     go install github.com/jaeles-project/gospider@v1.1.6
 
 # ---- Stage 1: final image ----
-FROM ${GHOSTWIRE_BASE} AS final
+FROM ${EIDOLON_BASE} AS final
 USER root
 
-LABEL org.opencontainers.image.title="ghostwire-web" \
+LABEL org.opencontainers.image.title="eidolon-web" \
       org.opencontainers.image.description="Web application security: ffuf, gobuster, sqlmap, nikto, nuclei, httpx, wfuzz, wafw00f" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
 
 ENV GHOST_LABEL=web
 
@@ -83,8 +83,8 @@ RUN set -eux; \
     done
 
 # ---- Variant profile ----
-COPY scripts/ghostwire-web.profile.sh /etc/profile.d/ghostwire-web.sh
-RUN echo '. /etc/profile.d/ghostwire-web.sh' >> /home/ghost/.bashrc
+COPY scripts/eidolon-web.profile.sh /etc/profile.d/eidolon-web.sh
+RUN echo '. /etc/profile.d/eidolon-web.sh' >> /home/ghost/.bashrc
 
 USER ghost
 WORKDIR /work

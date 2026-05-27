@@ -12,4 +12,4 @@ alias cc='claude -p'
 
 echo "[claude] Model: DeepSeek @ ${ANTHROPIC_BASE_URL}"
 echo "[claude] Commands: claude (interactive), cc 'prompt' (one-shot)"
-echo "[claude] Methodology: /opt/ghostwire-methodology.md | gw help"
+echo "[claude] Methodology: /opt/eidolon-methodology.md | gw help"

@@ -3,7 +3,7 @@
         push pull verify sbom
 
 COMPOSE      := docker compose
-COMPOSE_BUILD:= GHOSTWIRE_IMAGE_TAG=local GHOSTWIRE_IMAGE_PREFIX=ghostwire $(COMPOSE)
+COMPOSE_BUILD:= EIDOLON_IMAGE_TAG=local EIDOLON_IMAGE_PREFIX=eidolon $(COMPOSE)
 REGISTRY     := ghcr.io
 IMAGE_OWNER  := hacktivesec
 TAG          := $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
@@ -14,24 +14,24 @@ help: ## Show this help
 
 # ---- Build targets ----
 base: ## Build the shared base image (run first, locally)
-	docker build -f Dockerfile.base -t ghostwire-base:dev .
+	docker build -f Dockerfile.base -t eidolon-base:dev .
 
 build: web ## Build the web image (default)
 
 build-all: base ## Build base + every variant locally
 	@for v in web net ad mobile wifi pivot claude; do \
 	  echo "==> building $$v"; \
-	  docker build -f Dockerfile.$$v --build-arg GHOSTWIRE_BASE=ghostwire-base:dev \
-	    -t ghostwire-$$v:dev . || exit 1; \
+	  docker build -f Dockerfile.$$v --build-arg EIDOLON_BASE=eidolon-base:dev \
+	    -t eidolon-$$v:dev . || exit 1; \
 	done
 
 claude: base ## Build the Claude Code variant
-	docker build -f Dockerfile.claude -t ghostwire-claude:dev .
+	docker build -f Dockerfile.claude -t eidolon-claude:dev .
 	$(COMPOSE_BUILD) up -d claude
 
 web net wifi mobile ad pivot: base ## Build & start a single variant (locally)
-	docker build -f Dockerfile.$@ --build-arg GHOSTWIRE_BASE=ghostwire-base:dev \
-	  -t ghostwire-$@:dev .
+	docker build -f Dockerfile.$@ --build-arg EIDOLON_BASE=eidolon-base:dev \
+	  -t eidolon-$@:dev .
 	$(COMPOSE_BUILD) up -d $@
 
 # ---- Runtime ----
@@ -49,37 +49,37 @@ shell-%: ## Shell into a specific container (e.g. make shell-ad)
 
 # ---- Testing ----
 test: ## Run smoke tests against web image
-	docker run --rm ghostwire-web:dev smoke-test web
+	docker run --rm eidolon-web:dev smoke-test web
 
 test-all: ## Smoke-test every variant locally
 	@for v in base web net ad mobile wifi pivot; do \
 	  echo "==> smoke $$v"; \
-	  docker run --rm ghostwire-$$v:dev smoke-test $$v || exit 1; \
+	  docker run --rm eidolon-$$v:dev smoke-test $$v || exit 1; \
 	done
 
 test-%: ## Smoke-test a single variant (e.g. make test-ad)
-	docker run --rm ghostwire-$*:dev smoke-test $*
+	docker run --rm eidolon-$*:dev smoke-test $*
 
 # ---- Registry ----
 pull: ## Pull all variants from GHCR at TAG (default: latest)
 	@for v in base web net ad mobile wifi pivot; do \
-	  docker pull $(REGISTRY)/$(IMAGE_OWNER)/ghostwire-$$v:$${T:-latest}; \
+	  docker pull $(REGISTRY)/$(IMAGE_OWNER)/eidolon-$$v:$${T:-latest}; \
 	done
 
 push: ## Tag local dev images and push to GHCR (use for one-offs; prefer CI)
 	@for v in base web net ad mobile wifi pivot; do \
-	  docker tag ghostwire-$$v:dev $(REGISTRY)/$(IMAGE_OWNER)/ghostwire-$$v:$(TAG); \
-	  docker push    $(REGISTRY)/$(IMAGE_OWNER)/ghostwire-$$v:$(TAG); \
+	  docker tag eidolon-$$v:dev $(REGISTRY)/$(IMAGE_OWNER)/eidolon-$$v:$(TAG); \
+	  docker push    $(REGISTRY)/$(IMAGE_OWNER)/eidolon-$$v:$(TAG); \
 	done
 
 verify: ## Verify cosign signature on a tag (V=variant T=tag)
 	cosign verify \
-	  --certificate-identity-regexp 'https://github.com/$(IMAGE_OWNER)/ghostwire/.*' \
+	  --certificate-identity-regexp 'https://github.com/$(IMAGE_OWNER)/eidolon/.*' \
 	  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-	  $(REGISTRY)/$(IMAGE_OWNER)/ghostwire-$${V:-web}:$${T:-latest}
+	  $(REGISTRY)/$(IMAGE_OWNER)/eidolon-$${V:-web}:$${T:-latest}
 
 sbom: ## Generate SBOM for a local image (V=variant)
-	syft ghostwire-$${V:-web}:dev -o spdx-json > sbom-$${V:-web}.spdx.json
+	syft eidolon-$${V:-web}:dev -o spdx-json > sbom-$${V:-web}.spdx.json
 	@echo "wrote sbom-$${V:-web}.spdx.json"
 
 # ---- Cleanup ----
@@ -87,8 +87,8 @@ clean: ## Remove containers, networks, volumes
 	$(COMPOSE) down -v --remove-orphans
 	docker image prune -f
 
-prune: clean ## Aggressive: remove all ghostwire images + buildx cache
-	-docker images --filter=reference='ghostwire-*' -q | xargs -r docker rmi -f
-	-docker images --filter=reference='ghcr.io/$(IMAGE_OWNER)/ghostwire-*' -q | xargs -r docker rmi -f
+prune: clean ## Aggressive: remove all eidolon images + buildx cache
+	-docker images --filter=reference='eidolon-*' -q | xargs -r docker rmi -f
+	-docker images --filter=reference='ghcr.io/$(IMAGE_OWNER)/eidolon-*' -q | xargs -r docker rmi -f
 	docker buildx prune -af
 	docker system prune -f

@@ -3,7 +3,7 @@
 set -euo pipefail
 OUT="${1:-}"
 manifest() {
-  echo "=== ghostwire tool manifest ==="
+  echo "=== eidolon tool manifest ==="
   echo "generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo ""
   for cmd in nmap masscan gobuster nikto sqlmap whatweb wafw00f wfuzz \

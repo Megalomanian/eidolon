@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-ARG GHOSTWIRE_BASE=ghostwire-base:dev
+ARG EIDOLON_BASE=eidolon-base:dev
 
 # ---- Stage 0: build bulk_extractor from source (pinned) ----
 FROM ubuntu:24.04 AS bulkbuilder
@@ -32,12 +32,12 @@ ENV GOOS=${TARGETOS} GOARCH=${TARGETARCH}
 RUN go install github.com/ropnop/kerbrute@v1.0.3
 
 # ---- Stage 2: AD & Cloud image ----
-FROM ${GHOSTWIRE_BASE} AS final
+FROM ${EIDOLON_BASE} AS final
 USER root
 
-LABEL org.opencontainers.image.title="ghostwire-ad" \
+LABEL org.opencontainers.image.title="eidolon-ad" \
       org.opencontainers.image.description="Active Directory & Cloud penetration testing" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
 
 ENV GHOST_LABEL=ad
 
@@ -184,8 +184,8 @@ RUN chmod +x /usr/local/bin/gw-ad-quick /usr/local/bin/gw-cloud-audit
 COPY scripts/gw-gpu-check /usr/local/bin/gw-gpu-check
 RUN chmod +x /usr/local/bin/gw-gpu-check
 
-COPY scripts/ghostwire-ad.profile.sh /etc/profile.d/ghostwire-ad.sh
-RUN echo '. /etc/profile.d/ghostwire-ad.sh' >> /home/ghost/.bashrc
+COPY scripts/eidolon-ad.profile.sh /etc/profile.d/eidolon-ad.sh
+RUN echo '. /etc/profile.d/eidolon-ad.sh' >> /home/ghost/.bashrc
 
 RUN printf 'ghost ALL=(ALL) NOPASSWD: /usr/sbin/tcpdump, /sbin/ip, /usr/bin/tshark\n' > /etc/sudoers.d/ghost && \
     chmod 0440 /etc/sudoers.d/ghost

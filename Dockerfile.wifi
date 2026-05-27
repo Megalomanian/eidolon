@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
-ARG GHOSTWIRE_BASE=ghostwire-base:dev
+ARG EIDOLON_BASE=eidolon-base:dev
 
-FROM ${GHOSTWIRE_BASE} AS final
+FROM ${EIDOLON_BASE} AS final
 USER root
 
-LABEL org.opencontainers.image.title="ghostwire-wifi" \
+LABEL org.opencontainers.image.title="eidolon-wifi" \
       org.opencontainers.image.description="Wireless security toolkit" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
 
 ENV GHOST_LABEL=wifi
 
@@ -26,8 +26,8 @@ RUN chmod +x /usr/local/bin/wifi-mon /usr/local/bin/wifi-scan /usr/local/bin/wif
 COPY scripts/gw-wifi-capture /usr/local/bin/gw-wifi-capture
 RUN chmod +x /usr/local/bin/gw-wifi-capture
 
-COPY scripts/ghostwire-wifi.profile.sh /etc/profile.d/ghostwire-wifi.sh
-RUN echo '. /etc/profile.d/ghostwire-wifi.sh' >> /home/ghost/.bashrc
+COPY scripts/eidolon-wifi.profile.sh /etc/profile.d/eidolon-wifi.sh
+RUN echo '. /etc/profile.d/eidolon-wifi.sh' >> /home/ghost/.bashrc
 
 RUN printf 'ghost ALL=(ALL) NOPASSWD: /usr/sbin/tcpdump, /sbin/ip, /usr/bin/tshark, /usr/sbin/airmon-ng, /usr/sbin/iw, /usr/bin/airodump-ng, /usr/bin/aireplay-ng, /usr/sbin/rfkill\n' > /etc/sudoers.d/ghost && \
     chmod 0440 /etc/sudoers.d/ghost

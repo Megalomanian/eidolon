@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-ARG GHOSTWIRE_BASE=ghostwire-base:dev
+ARG EIDOLON_BASE=eidolon-base:dev
 
 # ---- Stage 0: chisel + microsocks build ----
 FROM golang:1.26-bookworm AS gobuilder
@@ -9,12 +9,12 @@ ENV GOOS=${TARGETOS} GOARCH=${TARGETARCH}
 RUN go install github.com/jpillora/chisel@v1.11.5
 
 # ---- Stage 1: final pivot image ----
-FROM ${GHOSTWIRE_BASE} AS final
+FROM ${EIDOLON_BASE} AS final
 USER root
 
-LABEL org.opencontainers.image.title="ghostwire-pivot" \
+LABEL org.opencontainers.image.title="eidolon-pivot" \
       org.opencontainers.image.description="SOCKS5 / WireGuard / SSH jumpbox for tunneling" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
 
 ENV GHOST_LABEL=pivot
 
@@ -34,8 +34,8 @@ COPY --from=gobuilder /go/bin/chisel /usr/local/bin/chisel
 COPY scripts/gw-socks5 scripts/gw-chisel-server scripts/gw-wg-up scripts/gw-pivot-help /usr/local/bin/
 RUN chmod +x /usr/local/bin/gw-socks5 /usr/local/bin/gw-chisel-server /usr/local/bin/gw-wg-up /usr/local/bin/gw-pivot-help
 
-COPY scripts/ghostwire-pivot.profile.sh /etc/profile.d/ghostwire-pivot.sh
-RUN echo '. /etc/profile.d/ghostwire-pivot.sh' >> /home/ghost/.bashrc
+COPY scripts/eidolon-pivot.profile.sh /etc/profile.d/eidolon-pivot.sh
+RUN echo '. /etc/profile.d/eidolon-pivot.sh' >> /home/ghost/.bashrc
 
 RUN printf 'ghost ALL=(ALL) NOPASSWD: /usr/bin/wg-quick, /usr/sbin/openvpn, /sbin/ip, /sbin/iptables, /sbin/nft\n' > /etc/sudoers.d/ghost && \
     chmod 0440 /etc/sudoers.d/ghost

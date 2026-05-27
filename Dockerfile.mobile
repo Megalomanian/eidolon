@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-ARG GHOSTWIRE_BASE=ghostwire-base:dev
+ARG EIDOLON_BASE=eidolon-base:dev
 
 # ---- Stage 0: ipatool (pinned) ----
 FROM golang:1.26-bookworm AS gobuilder
@@ -12,12 +12,12 @@ RUN set -eux; \
     go build -o /go/bin/ipatool .
 
 # ---- Stage 1: final image ----
-FROM ${GHOSTWIRE_BASE} AS final
+FROM ${EIDOLON_BASE} AS final
 USER root
 
-LABEL org.opencontainers.image.title="ghostwire-mobile" \
+LABEL org.opencontainers.image.title="eidolon-mobile" \
       org.opencontainers.image.description="Mobile security toolkit (Android & iOS)" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
 
 ENV GHOST_LABEL=mobile
 
@@ -76,8 +76,8 @@ RUN chmod +x /usr/local/bin/gw-mobile-apk /usr/local/bin/gw-mobile-ios /usr/loca
 COPY scripts/gw-usb-capture /usr/local/bin/gw-usb-capture
 RUN chmod +x /usr/local/bin/gw-usb-capture
 
-COPY scripts/ghostwire-mobile.profile.sh /etc/profile.d/ghostwire-mobile.sh
-RUN echo '. /etc/profile.d/ghostwire-mobile.sh' >> /home/ghost/.bashrc
+COPY scripts/eidolon-mobile.profile.sh /etc/profile.d/eidolon-mobile.sh
+RUN echo '. /etc/profile.d/eidolon-mobile.sh' >> /home/ghost/.bashrc
 
 RUN printf 'ghost ALL=(ALL) NOPASSWD: /usr/bin/adb\n' > /etc/sudoers.d/ghost && \
     chmod 0440 /etc/sudoers.d/ghost

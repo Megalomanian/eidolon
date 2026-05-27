@@ -9,16 +9,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · [Semantic Ve
 
 ### Added
 - `Dockerfile.base` — shared layer (apt core, python venv, ghost user, scripts).
-  All variants now `FROM ghostwire-base`, eliminating ~5×500MB of duplication.
+  All variants now `FROM eidolon-base`, eliminating ~5×500MB of duplication.
 - `Dockerfile.pivot` — SOCKS5 / chisel / WireGuard / OpenVPN / sshuttle jumpbox.
   Closes the SOCKS-pivot-first design loop.
 - `gw` orchestrator (`scripts/gw`) with subcommands:
   `new`, `use`, `cd`, `ls`, `recon`, `web`, `fuzz`, `ad`, `mobile`, `wifi`,
   `report`, `versions`, `help`.
 - Engagement-aware `/shared/<client>/<UTC-date>/{recon,scans,creds,loot,reports,logs}`
-  layout, persisted to `~/.config/ghostwire/active`. `cdgw` jumps in.
+  layout, persisted to `~/.config/eidolon/active`. `cdgw` jumps in.
 - Multi-arch (amd64 + arm64) builds via buildx + QEMU.
-- GHCR publishing of all 7 images (`ghcr.io/hacktivesec/ghostwire-{base,web,net,ad,mobile,wifi,pivot}`).
+- GHCR publishing of all 7 images (`ghcr.io/hacktivesec/eidolon-{base,web,net,ad,mobile,wifi,pivot}`).
 - Cosign keyless OIDC signing on every published image.
 - SLSA build provenance attestations.
 - syft SBOM generation per image.
@@ -35,10 +35,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · [Semantic Ve
   `Responder` (commit), `Pacu` `v1.7.0`, `coercer` `2.4.3`, `MobSF` `v4.4.6`,
   `bulk_extractor` `v2.1.1`.
 - `docker-compose.yml`: pull from GHCR by default; build only when
-  `GHOSTWIRE_IMAGE_TAG=local`. `.env` no longer required to bring services up.
+  `EIDOLON_IMAGE_TAG=local`. `.env` no longer required to bring services up.
 - GCP CLI install now arch-aware (was hardcoded x86_64).
 - Dropped `env_file: [.env]` from compose (made optional via env defaults).
-- README rewritten with "why ghostwire" section, GHCR pull quickstart,
+- README rewritten with "why eidolon" section, GHCR pull quickstart,
   cosign verify recipe, and `gw` orchestrator examples.
 
 ### Security

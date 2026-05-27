@@ -10,4 +10,4 @@ exec docker run -it --rm \
   -e CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 \
   -v "$(pwd):/work" \
   -v "$(pwd)/artifacts:/shared" \
-  ghostwire-claude:dev "$@"
+  eidolon-claude:dev "$@"

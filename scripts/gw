@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# gw — ghostwire orchestrator
+# gw — eidolon orchestrator
 # Subcommands wrap common pentest flows and route output into engagement dirs.
 
 set -euo pipefail
 
 GW_VERSION="0.1.0"
-GW_STATE_DIR="${HOME}/.config/ghostwire"
+GW_STATE_DIR="${HOME}/.config/eidolon"
 GW_ACTIVE_FILE="${GW_STATE_DIR}/active"
 ARTIFACTS="${ARTIFACTS:-/shared}"
 SECLISTS="${SECLISTS:-/opt/seclists}"
@@ -317,7 +317,7 @@ cmd_versions() { gw-versions "$@"; }
 
 cmd_help() {
   cat <<HELP
-gw — ghostwire orchestrator (v${GW_VERSION})
+gw — eidolon orchestrator (v${GW_VERSION})
 
 ENGAGEMENT
   gw new <client>             create new engagement dir under ${ARTIFACTS}

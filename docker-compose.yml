@@ -1,7 +1,7 @@
-name: ghostwire
+name: eidolon
 
 # .env (gitignored) is auto-loaded if present; defaults below cover the unset case.
-# Variant images are pulled from GHCR by default. Set GHOSTWIRE_IMAGE_TAG=local
+# Variant images are pulled from GHCR by default. Set EIDOLON_IMAGE_TAG=local
 # and run `make build` to use locally-built images instead.
 
 x-common: &common
@@ -21,66 +21,66 @@ x-common: &common
 services:
   base:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-base:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-base:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.base
-      tags: [ghostwire-base:dev]
+      tags: [eidolon-base:dev]
     profiles: [build]
 
   web:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-web:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-web:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.web
-    container_name: ghostwire-web
+    container_name: eidolon-web
     environment: { <<: *common-env, GHOST_LABEL: web }
 
   net:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-net:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-net:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.net
-    container_name: ghostwire-net
+    container_name: eidolon-net
     environment: { <<: *common-env, GHOST_LABEL: net }
 
   wifi:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-wifi:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-wifi:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.wifi
-    container_name: ghostwire-wifi
+    container_name: eidolon-wifi
     cap_add: ["NET_RAW", "NET_ADMIN"]
     environment: { <<: *common-env, GHOST_LABEL: wifi }
 
   mobile:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-mobile:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-mobile:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.mobile
-    container_name: ghostwire-mobile
+    container_name: eidolon-mobile
     environment: { <<: *common-env, GHOST_LABEL: mobile }
 
   ad:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-ad:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-ad:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.ad
-    container_name: ghostwire-ad
+    container_name: eidolon-ad
     environment: { <<: *common-env, GHOST_LABEL: ad }
 
   pivot:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-pivot:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-pivot:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.pivot
-    container_name: ghostwire-pivot
+    container_name: eidolon-pivot
     cap_add: ["NET_ADMIN"]
     ports:
       - "1080:1080"
@@ -89,11 +89,11 @@ services:
 
   claude:
     <<: *common
-    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-claude:${GHOSTWIRE_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/hacktivesec/eidolon}-claude:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.claude
-    container_name: ghostwire-claude
+    container_name: eidolon-claude
     environment:
       <<: *common-env
       GHOST_LABEL: claude

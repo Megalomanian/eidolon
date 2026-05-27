@@ -2,11 +2,11 @@
 
 ## Reporting
 
-If you find a security issue **in ghostwire itself** (e.g. a build that pulls a
+If you find a security issue **in eidolon itself** (e.g. a build that pulls a
 compromised dependency, a privilege escalation in the image, a leaking
 container default), report it privately:
 
-- **GitHub Security Advisories**: https://github.com/hacktivesec/ghostwire/security/advisories/new
+- **GitHub Security Advisories**: https://github.com/hacktivesec/eidolon/security/advisories/new
 - **Email** (alternative): see `git log --format='%ae' | sort -u | head -1`
 
 Please include:
@@ -38,13 +38,13 @@ provenance attached. Verify before pulling into production:
 
 ```sh
 cosign verify \
-  --certificate-identity-regexp 'https://github.com/hacktivesec/ghostwire/.*' \
+  --certificate-identity-regexp 'https://github.com/hacktivesec/eidolon/.*' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  ghcr.io/hacktivesec/ghostwire-web:latest
+  ghcr.io/hacktivesec/eidolon-web:latest
 ```
 
 ## Intended use
 
-ghostwire is for authorised security testing: red team, pentest, DFIR, CTF,
+eidolon is for authorised security testing: red team, pentest, DFIR, CTF,
 training, and self-owned-lab work. You are responsible for laws, contracts,
 and Rules of Engagement.

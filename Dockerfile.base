@@ -2,10 +2,10 @@
 ARG BASE_IMAGE=ubuntu:24.04
 FROM ${BASE_IMAGE}
 
-LABEL org.opencontainers.image.title="ghostwire-base" \
-      org.opencontainers.image.description="Shared base for all ghostwire variants" \
-      org.opencontainers.image.vendor="ghostwire" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire" \
+LABEL org.opencontainers.image.title="eidolon-base" \
+      org.opencontainers.image.description="Shared base for all eidolon variants" \
+      org.opencontainers.image.vendor="eidolon" \
+      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon" \
       org.opencontainers.image.licenses="CC0-1.0"
 
 # ---- Use Chinese mirror for faster apt ----
@@ -72,8 +72,8 @@ RUN chmod +x /usr/local/bin/px /usr/local/bin/pxcurl /usr/local/bin/pxwget \
              /usr/local/bin/gw /usr/local/bin/gw-ssh-agent-check
 
 # ---- Profile ----
-COPY scripts/ghostwire-base.profile.sh /etc/profile.d/ghostwire-base.sh
-RUN echo '. /etc/profile.d/ghostwire-base.sh' >> /home/ghost/.bashrc
+COPY scripts/eidolon-base.profile.sh /etc/profile.d/eidolon-base.sh
+RUN echo '. /etc/profile.d/eidolon-base.sh' >> /home/ghost/.bashrc
 
 # ---- Smoke test entry point ----
 COPY tests/smoke-test.sh /usr/local/bin/smoke-test

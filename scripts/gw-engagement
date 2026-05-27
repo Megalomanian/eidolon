@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # gw-engagement — sourced by /etc/profile.d to expose ENGAGEMENT_DIR + cdgw.
-# Reads ~/.config/ghostwire/active and exports ENGAGEMENT_DIR + ENGAGEMENT.
+# Reads ~/.config/eidolon/active and exports ENGAGEMENT_DIR + ENGAGEMENT.
 [ -n "${BASH_VERSION:-}" ] || return 0
 
-GW_ACTIVE_FILE="${HOME}/.config/ghostwire/active"
+GW_ACTIVE_FILE="${HOME}/.config/eidolon/active"
 if [ -f "${GW_ACTIVE_FILE}" ]; then
   d="$(cat "${GW_ACTIVE_FILE}" 2>/dev/null)"
   if [ -d "$d" ]; then

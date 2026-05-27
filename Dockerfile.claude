@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
-# GhostWire Claude variant — adds Claude Code + DeepSeek integration on top of base
-ARG BASE_IMAGE=ghostwire-base:dev
+# Eidolon Claude variant — adds Claude Code + DeepSeek integration on top of base
+ARG BASE_IMAGE=eidolon-base:dev
 FROM ${BASE_IMAGE}
 
 USER root
@@ -25,17 +25,17 @@ ENV CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 
 # Pre-configure Claude Code to skip onboarding & connectivity check
 RUN mkdir -p /home/ghost/.claude
-COPY scripts/ghostwire-claude-settings.json /home/ghost/.claude/settings.json
+COPY scripts/eidolon-claude-settings.json /home/ghost/.claude/settings.json
 # Critical: without ~/.claude.json, Claude Code ignores ANTHROPIC_BASE_URL
 # and does a connectivity check against api.anthropic.com (bugs #15274, #26935)
 RUN echo '{"hasCompletedOnboarding":true}' > /home/ghost/.claude.json
 
-# Copy methodology reference (available at /opt/ghostwire-methodology.md)
-COPY PENTEST-METHODOLOGY.md /opt/ghostwire-methodology.md
+# Copy methodology reference (available at /opt/eidolon-methodology.md)
+COPY PENTEST-METHODOLOGY.md /opt/eidolon-methodology.md
 
 # Copy Claude profile script
-COPY scripts/ghostwire-claude.profile.sh /etc/profile.d/ghostwire-claude.sh
-RUN echo '. /etc/profile.d/ghostwire-claude.sh' >> /home/ghost/.bashrc
+COPY scripts/eidolon-claude.profile.sh /etc/profile.d/eidolon-claude.sh
+RUN echo '. /etc/profile.d/eidolon-claude.sh' >> /home/ghost/.bashrc
 
 # Fix ownership of ghost home after root COPYs
 RUN chown -R ghost:ghost /home/ghost

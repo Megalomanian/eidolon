@@ -11,7 +11,7 @@ ghost_prompt(){ local r=$?; if [ $r -eq 0 ]; then GS="\[\e[1;32m\]✔"; else GS=
 PROMPT_COMMAND=ghost_prompt
 
 # Variant scripts set GW_NAME, GW_COLOR, GW_LABEL before sourcing this
-GW_NAME=${GW_NAME:-ghostwire}
+GW_NAME=${GW_NAME:-eidolon}
 GW_COLOR=${GW_COLOR:-"1;37m"}
 GW_LABEL=${GHOST_LABEL:-${GW_LABEL:-tools}}
 PS1="\[\e[90m\][\A]\[\e[0m\] \[\e[${GW_COLOR}\]${GW_NAME}\[\e[0m\]\[\e[90m\]@\[\e[0m\]\[\e[90m\]${GW_LABEL}\[\e[0m\] \[\e[90m\](\w)\[\e[0m\]\n${GS}\[\e[90m\]>\[\e[0m\] "

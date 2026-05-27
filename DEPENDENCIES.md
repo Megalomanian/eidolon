@@ -1,6 +1,6 @@
-# ghostwire – Dependencies
+# eidolon – Dependencies
 
-All images derive from `ghostwire-base` (Ubuntu 24.04). Every external pin
+All images derive from `eidolon-base` (Ubuntu 24.04). Every external pin
 lives in the relevant Dockerfile via build-args (`*_REF`) so a single grep
 shows what's locked: `git grep '_REF=' Dockerfile.*`.
 
@@ -127,7 +127,7 @@ build time:
 docker build -f Dockerfile.web \
   --build-arg SECLISTS_REF=2025.3 \
   --build-arg TESTSSL_REF=v3.2.2 \
-  -t ghostwire-web:custom .
+  -t eidolon-web:custom .
 ```
 
 Dependabot opens weekly PRs for `docker` and `github-actions` ecosystems.
