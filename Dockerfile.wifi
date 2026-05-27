@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+ARG GHOSTWIRE_BASE=ghostwire-base:dev
+
+FROM ${GHOSTWIRE_BASE} AS final
+USER root
+
+LABEL org.opencontainers.image.title="ghostwire-wifi" \
+      org.opencontainers.image.description="Wireless security toolkit" \
+      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+
+ENV GHOST_LABEL=wifi
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      aircrack-ng reaver pixiewps \
+      hcxdumptool hcxtools \
+      iw wireless-tools rfkill wpasupplicant \
+      tcpdump tshark \
+      usbutils kmod; \
+    rm -rf /var/lib/apt/lists/*
+
+COPY scripts/wifi-mon scripts/wifi-scan scripts/wifi-capture /usr/local/bin/
+RUN chmod +x /usr/local/bin/wifi-mon /usr/local/bin/wifi-scan /usr/local/bin/wifi-capture
+
+COPY scripts/gw-wifi-capture /usr/local/bin/gw-wifi-capture
+RUN chmod +x /usr/local/bin/gw-wifi-capture
+
+COPY scripts/ghostwire-wifi.profile.sh /etc/profile.d/ghostwire-wifi.sh
+RUN echo '. /etc/profile.d/ghostwire-wifi.sh' >> /home/ghost/.bashrc
+
+RUN printf 'ghost ALL=(ALL) NOPASSWD: /usr/sbin/tcpdump, /sbin/ip, /usr/bin/tshark, /usr/sbin/airmon-ng, /usr/sbin/iw, /usr/bin/airodump-ng, /usr/bin/aireplay-ng, /usr/sbin/rfkill\n' > /etc/sudoers.d/ghost && \
+    chmod 0440 /etc/sudoers.d/ghost
+
+USER ghost
+WORKDIR /work
+
+HEALTHCHECK --interval=5m --timeout=10s --start-period=10s --retries=3 \
+  CMD sh -c 'command -v airodump-ng >/dev/null 2>&1 && command -v aircrack-ng >/dev/null 2>&1 && command -v tshark >/dev/null 2>&1 || exit 1'
+
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["/bin/bash"]

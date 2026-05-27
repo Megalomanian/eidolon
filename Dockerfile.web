@@ -1,0 +1,96 @@
+# syntax=docker/dockerfile:1
+ARG GHOSTWIRE_BASE=ghostwire-base:dev
+
+# ---- Stage 0: compile Go tools ----
+FROM golang:1.26-bookworm AS gobuilder
+ENV CGO_ENABLED=0 GOTOOLCHAIN=auto
+ARG TARGETOS TARGETARCH
+ENV GOOS=${TARGETOS} GOARCH=${TARGETARCH}
+RUN set -eux; \
+    go install github.com/ffuf/ffuf/v2@v2.1.0; \
+    go install github.com/projectdiscovery/nuclei/v3/cmd/nuclei@v3.7.1; \
+    go install github.com/projectdiscovery/httpx/cmd/httpx@v1.9.0; \
+    go install github.com/projectdiscovery/dnsx/cmd/dnsx@v1.2.3; \
+    go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@v2.6.6; \
+    go install github.com/tomnomnom/waybackurls@v0.1.0; \
+    go install github.com/tomnomnom/gf@dcd4c361f9f5ba302294ed38b8ce278e8ba69006; \
+    go install github.com/tomnomnom/unfurl@v0.4.3; \
+    go install github.com/tomnomnom/qsreplace@v0.0.3; \
+    go install github.com/tomnomnom/anew@v0.1.1; \
+    go install github.com/tomnomnom/assetfinder@v0.1.1; \
+    go install github.com/jaeles-project/jaeles@beta-v0.17.1; \
+    go install github.com/jaeles-project/gospider@v1.1.6
+
+# ---- Stage 1: final image ----
+FROM ${GHOSTWIRE_BASE} AS final
+USER root
+
+LABEL org.opencontainers.image.title="ghostwire-web" \
+      org.opencontainers.image.description="Web application security: ffuf, gobuster, sqlmap, nikto, nuclei, httpx, wfuzz, wafw00f" \
+      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+
+ENV GHOST_LABEL=web
+
+ARG SECLISTS_REF=2026.1
+ARG XSSTRIKE_REF=ab27955d36740572b9c14fad33de80b08e2a87a3
+ARG TESTSSL_REF=v3.2.3
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      default-jre-headless nmap \
+      nikto whatweb wafw00f wfuzz gobuster; \
+    rm -rf /var/lib/apt/lists/*
+
+# ---- SecLists (pinned) ----
+RUN set -eux; \
+    git clone --depth=1 --branch "${SECLISTS_REF}" \
+      https://github.com/danielmiessler/SecLists "${SECLISTS}"; \
+    rm -rf "${SECLISTS}/.git"; \
+    chown -R ghost:ghost "${SECLISTS}"
+
+# ---- Python web tools ----
+RUN "${GHOST_VENV}/bin/pip" install --no-cache-dir \
+      sqlmap arjun commix wafw00f
+
+# ---- XSStrike (pinned) ----
+RUN set -eux; \
+    git clone https://github.com/s0md3v/XSStrike /opt/xsstrike; \
+    cd /opt/xsstrike && git checkout "${XSSTRIKE_REF}" && rm -rf .git; \
+    "${GHOST_VENV}/bin/pip" install --no-cache-dir -r /opt/xsstrike/requirements.txt; \
+    printf '#!/usr/bin/env bash\nexec /opt/ghost-venv/bin/python /opt/xsstrike/xsstrike.py "$@"\n' \
+      > /usr/local/bin/xsstrike; \
+    chmod +x /usr/local/bin/xsstrike; \
+    chown -R ghost:ghost /opt/xsstrike
+
+# ---- testssl.sh (pinned) ----
+RUN set -eux; \
+    git clone --depth=1 --branch "${TESTSSL_REF}" \
+      https://github.com/drwetter/testssl.sh /opt/testssl; \
+    rm -rf /opt/testssl/.git; \
+    ln -sf /opt/testssl/testssl.sh /usr/local/bin/testssl; \
+    chmod +x /opt/testssl/testssl.sh; \
+    chown -R ghost:ghost /opt/testssl
+
+# ---- Go tools from builder stage ----
+COPY --from=gobuilder /go/bin/ /usr/local/bin/
+
+# ---- venv shims ----
+RUN set -eux; \
+    for n in sqlmap wafw00f arjun commix; do \
+      printf '%s\n' '#!/usr/bin/env bash' "exec /opt/ghost-venv/bin/${n} \"\$@\"" > "/usr/local/bin/${n}"; \
+      chmod +x "/usr/local/bin/${n}"; \
+    done
+
+# ---- Variant profile ----
+COPY scripts/ghostwire-web.profile.sh /etc/profile.d/ghostwire-web.sh
+RUN echo '. /etc/profile.d/ghostwire-web.sh' >> /home/ghost/.bashrc
+
+USER ghost
+WORKDIR /work
+
+HEALTHCHECK --interval=5m --timeout=10s --start-period=20s --retries=3 \
+  CMD sh -c 'command -v ffuf >/dev/null 2>&1 && command -v nuclei >/dev/null 2>&1 && command -v sqlmap >/dev/null 2>&1 || exit 1'
+
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["/bin/bash"]

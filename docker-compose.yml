@@ -1,0 +1,109 @@
+name: ghostwire
+
+# .env (gitignored) is auto-loaded if present; defaults below cover the unset case.
+# Variant images are pulled from GHCR by default. Set GHOSTWIRE_IMAGE_TAG=local
+# and run `make build` to use locally-built images instead.
+
+x-common: &common
+  restart: unless-stopped
+  volumes:
+    - ./:/work
+    - ./artifacts:/shared
+  tty: true
+  stdin_open: true
+  environment: &common-env
+    SOCKS5_HOST: ${SOCKS5_HOST:-127.0.0.1}
+    SOCKS5_PORT: ${SOCKS5_PORT:-1080}
+  networks:
+    - default
+    - vpn
+
+services:
+  base:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-base:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+      tags: [ghostwire-base:dev]
+    profiles: [build]
+
+  web:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-web:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: ghostwire-web
+    environment: { <<: *common-env, GHOST_LABEL: web }
+
+  net:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-net:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.net
+    container_name: ghostwire-net
+    environment: { <<: *common-env, GHOST_LABEL: net }
+
+  wifi:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-wifi:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.wifi
+    container_name: ghostwire-wifi
+    cap_add: ["NET_RAW", "NET_ADMIN"]
+    environment: { <<: *common-env, GHOST_LABEL: wifi }
+
+  mobile:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-mobile:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.mobile
+    container_name: ghostwire-mobile
+    environment: { <<: *common-env, GHOST_LABEL: mobile }
+
+  ad:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-ad:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.ad
+    container_name: ghostwire-ad
+    environment: { <<: *common-env, GHOST_LABEL: ad }
+
+  pivot:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-pivot:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.pivot
+    container_name: ghostwire-pivot
+    cap_add: ["NET_ADMIN"]
+    ports:
+      - "1080:1080"
+      - "8080:8080"
+    environment: { <<: *common-env, GHOST_LABEL: pivot }
+
+  claude:
+    <<: *common
+    image: ${GHOSTWIRE_IMAGE_PREFIX:-ghcr.io/hacktivesec/ghostwire}-claude:${GHOSTWIRE_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.claude
+    container_name: ghostwire-claude
+    environment:
+      <<: *common-env
+      GHOST_LABEL: claude
+      ANTHROPIC_BASE_URL: https://api.deepseek.com/anthropic
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      ANTHROPIC_API_KEY: ${DEEPSEEK_API_KEY}
+      CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1"
+
+networks:
+  default:
+  vpn:
+    external: true
+    name: ${VPN_NETWORK:-vpn}

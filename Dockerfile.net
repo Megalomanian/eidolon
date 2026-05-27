@@ -1,0 +1,59 @@
+# syntax=docker/dockerfile:1
+ARG GHOSTWIRE_BASE=ghostwire-base:dev
+
+# ---- Stage 0: compile Go tools ----
+FROM golang:1.26-bookworm AS gobuilder
+ENV CGO_ENABLED=0 GOTOOLCHAIN=auto
+ARG TARGETOS TARGETARCH
+ENV GOOS=${TARGETOS} GOARCH=${TARGETARCH}
+RUN set -eux; \
+    go install github.com/jpillora/chisel@v1.11.5; \
+    go install github.com/projectdiscovery/dnsx/cmd/dnsx@v1.2.3; \
+    go install github.com/projectdiscovery/httpx/cmd/httpx@v1.9.0; \
+    go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@v2.6.6
+
+# ---- Stage 1: final image ----
+FROM ${GHOSTWIRE_BASE} AS final
+USER root
+
+LABEL org.opencontainers.image.title="ghostwire-net" \
+      org.opencontainers.image.description="Network recon, tunneling & traffic analysis" \
+      org.opencontainers.image.source="https://github.com/hacktivesec/ghostwire"
+
+ENV GHOST_LABEL=net
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      nmap masscan \
+      tcpdump tshark tcpflow ngrep \
+      hydra ike-scan onesixtyone snmp \
+      sshuttle openvpn wireguard-tools \
+      libplist-utils; \
+    rm -rf /var/lib/apt/lists/*
+
+RUN "${GHOST_VENV}/bin/pip" install --no-cache-dir \
+      scapy impacket
+
+# ---- Go tools from builder stage ----
+COPY --from=gobuilder /go/bin/ /usr/local/bin/
+
+# ---- Net helper aliases ----
+COPY scripts/gw-net-scan scripts/gw-net-tunnel scripts/gw-net-traffic /usr/local/bin/
+RUN chmod +x /usr/local/bin/gw-net-scan /usr/local/bin/gw-net-tunnel /usr/local/bin/gw-net-traffic
+
+COPY scripts/ghostwire-net.profile.sh /etc/profile.d/ghostwire-net.sh
+RUN echo '. /etc/profile.d/ghostwire-net.sh' >> /home/ghost/.bashrc
+
+# ---- Scoped sudo for capture ----
+RUN printf 'ghost ALL=(ALL) NOPASSWD: /usr/sbin/tcpdump, /sbin/ip, /usr/bin/tshark\n' > /etc/sudoers.d/ghost && \
+    chmod 0440 /etc/sudoers.d/ghost
+
+USER ghost
+WORKDIR /work
+
+HEALTHCHECK --interval=5m --timeout=10s --start-period=20s --retries=3 \
+  CMD sh -c 'command -v nmap >/dev/null 2>&1 && command -v tshark >/dev/null 2>&1 || exit 1'
+
+ENTRYPOINT ["/usr/bin/tini","--"]
+CMD ["/bin/bash"]

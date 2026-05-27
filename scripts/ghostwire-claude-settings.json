@@ -1,0 +1,33 @@
+{
+  "hasCompletedOnboarding": true,
+  "autoCompactEnabled": true,
+  "theme": "dark",
+  "preferredModel": "deepseek-v4-pro",
+  "showTokensCounter": true,
+  "outputFormat": "text",
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "TaskCreate",
+      "TaskUpdate",
+      "TaskList",
+      "TaskGet",
+      "NotebookEdit(*)",
+      "Agent(*)",
+      "CronCreate(*)",
+      "CronDelete(*)",
+      "CronList",
+      "Skill(*)",
+      "AskUserQuestion"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}
