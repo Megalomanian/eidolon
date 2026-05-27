@@ -21,7 +21,7 @@ x-common: &common
 services:
   base:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-base:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-base:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.base
@@ -30,7 +30,7 @@ services:
 
   web:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-web:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-web:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.web
@@ -39,7 +39,7 @@ services:
 
   net:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-net:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-net:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.net
@@ -48,7 +48,7 @@ services:
 
   wifi:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-wifi:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-wifi:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.wifi
@@ -58,7 +58,7 @@ services:
 
   mobile:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-mobile:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-mobile:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.mobile
@@ -67,7 +67,7 @@ services:
 
   ad:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-ad:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-ad:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.ad
@@ -76,7 +76,7 @@ services:
 
   pivot:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-pivot:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-pivot:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.pivot
@@ -89,7 +89,7 @@ services:
 
   claude:
     <<: *common
-    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/Megalomanian/eidolon}-claude:${EIDOLON_IMAGE_TAG:-latest}
+    image: ${EIDOLON_IMAGE_PREFIX:-ghcr.io/megalomanian/eidolon}-claude:${EIDOLON_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile.claude

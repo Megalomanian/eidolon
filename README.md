@@ -140,11 +140,11 @@ echo 'DEEPSEEK_API_KEY=sk-your-key-here' > .env
 
 ```bash
 mkdir -p ./artifacts && sudo chown 1001:1001 ./artifacts
-docker pull ghcr.io/Megalomanian/eidolon-claude:latest
+docker pull ghcr.io/megalomanian/eidolon-claude:latest
 docker run --rm -it --network host \
   -e DEEPSEEK_API_KEY=sk-your-key \
   -v "$PWD:/work" -v "$PWD/artifacts:/shared" \
-  ghcr.io/Megalomanian/eidolon-claude:latest
+  ghcr.io/megalomanian/eidolon-claude:latest
 ```
 
 ### 方式三：本地构建
@@ -187,12 +187,12 @@ gw report                         # 整合为 markdown 报告
 # 启动跳板
 docker run -d --name pivot --network vpn \
   -p 127.0.0.1:1080:1080 \
-  ghcr.io/Megalomanian/eidolon-pivot:latest gw-socks5 1080
+  ghcr.io/megalomanian/eidolon-pivot:latest gw-socks5 1080
 
 # 从其他变体穿越
 docker run --rm -it --network vpn \
   -e SOCKS5_HOST=pivot -e SOCKS5_PORT=1080 \
-  ghcr.io/Megalomanian/eidolon-web:latest
+  ghcr.io/megalomanian/eidolon-web:latest
 
 # 容器内透明代理
 px curl -I https://internal.corp.local

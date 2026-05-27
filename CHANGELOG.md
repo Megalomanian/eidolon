@@ -18,7 +18,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) · [Semantic Ve
 - Engagement-aware `/shared/<client>/<UTC-date>/{recon,scans,creds,loot,reports,logs}`
   layout, persisted to `~/.config/eidolon/active`. `cdgw` jumps in.
 - Multi-arch (amd64 + arm64) builds via buildx + QEMU.
-- GHCR publishing of all 7 images (`ghcr.io/Megalomanian/eidolon-{base,web,net,ad,mobile,wifi,pivot}`).
+- GHCR publishing of all 7 images (`ghcr.io/megalomanian/eidolon-{base,web,net,ad,mobile,wifi,pivot}`).
 - Cosign keyless OIDC signing on every published image.
 - SLSA build provenance attestations.
 - syft SBOM generation per image.

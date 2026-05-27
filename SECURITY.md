@@ -40,7 +40,7 @@ provenance attached. Verify before pulling into production:
 cosign verify \
   --certificate-identity-regexp 'https://github.com/Megalomanian/eidolon/.*' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  ghcr.io/Megalomanian/eidolon-web:latest
+  ghcr.io/megalomanian/eidolon-web:latest
 ```
 
 ## Intended use
