@@ -129,7 +129,7 @@ docker compose exec ad bash
 ### 方式一：AI 一键体验（推荐）
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/eidolon.git
+git clone https://github.com/Megalomanian/eidolon.git
 cd eidolon
 echo 'DEEPSEEK_API_KEY=sk-your-key-here' > .env
 ./eidolon-claude.sh
@@ -140,11 +140,11 @@ echo 'DEEPSEEK_API_KEY=sk-your-key-here' > .env
 
 ```bash
 mkdir -p ./artifacts && sudo chown 1001:1001 ./artifacts
-docker pull ghcr.io/hacktivesec/eidolon-claude:latest
+docker pull ghcr.io/Megalomanian/eidolon-claude:latest
 docker run --rm -it --network host \
   -e DEEPSEEK_API_KEY=sk-your-key \
   -v "$PWD:/work" -v "$PWD/artifacts:/shared" \
-  ghcr.io/hacktivesec/eidolon-claude:latest
+  ghcr.io/Megalomanian/eidolon-claude:latest
 ```
 
 ### 方式三：本地构建
@@ -187,12 +187,12 @@ gw report                         # 整合为 markdown 报告
 # 启动跳板
 docker run -d --name pivot --network vpn \
   -p 127.0.0.1:1080:1080 \
-  ghcr.io/hacktivesec/eidolon-pivot:latest gw-socks5 1080
+  ghcr.io/Megalomanian/eidolon-pivot:latest gw-socks5 1080
 
 # 从其他变体穿越
 docker run --rm -it --network vpn \
   -e SOCKS5_HOST=pivot -e SOCKS5_PORT=1080 \
-  ghcr.io/hacktivesec/eidolon-web:latest
+  ghcr.io/Megalomanian/eidolon-web:latest
 
 # 容器内透明代理
 px curl -I https://internal.corp.local

@@ -37,7 +37,7 @@ USER root
 
 LABEL org.opencontainers.image.title="eidolon-ad" \
       org.opencontainers.image.description="Active Directory & Cloud penetration testing" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
+      org.opencontainers.image.source="https://github.com/Megalomanian/eidolon"
 
 ENV GHOST_LABEL=ad
 

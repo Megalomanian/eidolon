@@ -27,7 +27,7 @@ USER root
 
 LABEL org.opencontainers.image.title="eidolon-web" \
       org.opencontainers.image.description="Web application security: ffuf, gobuster, sqlmap, nikto, nuclei, httpx, wfuzz, wafw00f" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
+      org.opencontainers.image.source="https://github.com/Megalomanian/eidolon"
 
 ENV GHOST_LABEL=web
 

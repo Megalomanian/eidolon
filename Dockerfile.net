@@ -18,7 +18,7 @@ USER root
 
 LABEL org.opencontainers.image.title="eidolon-net" \
       org.opencontainers.image.description="Network recon, tunneling & traffic analysis" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
+      org.opencontainers.image.source="https://github.com/Megalomanian/eidolon"
 
 ENV GHOST_LABEL=net
 

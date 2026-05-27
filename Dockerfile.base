@@ -5,7 +5,7 @@ FROM ${BASE_IMAGE}
 LABEL org.opencontainers.image.title="eidolon-base" \
       org.opencontainers.image.description="Shared base for all eidolon variants" \
       org.opencontainers.image.vendor="eidolon" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon" \
+      org.opencontainers.image.source="https://github.com/Megalomanian/eidolon" \
       org.opencontainers.image.licenses="CC0-1.0"
 
 # ---- Use Chinese mirror for faster apt ----

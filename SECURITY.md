@@ -6,7 +6,7 @@ If you find a security issue **in eidolon itself** (e.g. a build that pulls a
 compromised dependency, a privilege escalation in the image, a leaking
 container default), report it privately:
 
-- **GitHub Security Advisories**: https://github.com/hacktivesec/eidolon/security/advisories/new
+- **GitHub Security Advisories**: https://github.com/Megalomanian/eidolon/security/advisories/new
 - **Email** (alternative): see `git log --format='%ae' | sort -u | head -1`
 
 Please include:
@@ -38,9 +38,9 @@ provenance attached. Verify before pulling into production:
 
 ```sh
 cosign verify \
-  --certificate-identity-regexp 'https://github.com/hacktivesec/eidolon/.*' \
+  --certificate-identity-regexp 'https://github.com/Megalomanian/eidolon/.*' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  ghcr.io/hacktivesec/eidolon-web:latest
+  ghcr.io/Megalomanian/eidolon-web:latest
 ```
 
 ## Intended use

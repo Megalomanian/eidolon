@@ -17,7 +17,7 @@ USER root
 
 LABEL org.opencontainers.image.title="eidolon-mobile" \
       org.opencontainers.image.description="Mobile security toolkit (Android & iOS)" \
-      org.opencontainers.image.source="https://github.com/hacktivesec/eidolon"
+      org.opencontainers.image.source="https://github.com/Megalomanian/eidolon"
 
 ENV GHOST_LABEL=mobile
 

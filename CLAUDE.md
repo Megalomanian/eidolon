@@ -194,7 +194,7 @@ Key implication: raw L3 scans (SYN, UDP) and packet capture do NOT traverse SOCK
 
 - **`base` service** uses `profiles: [build]` — never starts with `docker compose up`. It exists only as a build dependency.
 - **`vpn` network** is declared `external: true`. It must exist before starting containers: `docker network create vpn`. The default name can be overridden with `VPN_NETWORK` env var.
-- **Local vs. GHCR images**: Set `EIDOLON_IMAGE_TAG=local` and `EIDOLON_IMAGE_PREFIX=eidolon` to use locally-built images. Without these, compose pulls `ghcr.io/hacktivesec/eidolon-*:latest`.
+- **Local vs. GHCR images**: Set `EIDOLON_IMAGE_TAG=local` and `EIDOLON_IMAGE_PREFIX=eidolon` to use locally-built images. Without these, compose pulls `ghcr.io/Megalomanian/eidolon-*:latest`.
 - **`.env` file** (gitignored) must contain `DEEPSEEK_API_KEY=<key>`. Docker compose auto-loads it; `eidolon-claude.sh` sources it explicitly. Both `ANTHROPIC_API_KEY` and `DEEPSEEK_API_KEY` are set to this value in the claude service.
 
 ## Reproducibility
