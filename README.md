@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <sub>基于 <a href="https://github.com/hacktivesec/ghostwire">GhostWire</a> 二次开发 · 在 7 种场景化渗透容器之上，注入 AI 副驾驶能力</sub>
+  <sub>基于 <a href="https://github.com/hacktivesec/ghostwire">GhostWire</a> 二次开发 · 7 种场景化渗透容器 + Claude Code AI 驱动</sub>
 </p>
 
 <p align="center">
@@ -29,7 +29,7 @@
 
 **Eidolon 的答案**：把 AI 塞进渗透容器。
 
-每个变体都可以加载 **Claude Code**（通过 DeepSeek 的 Anthropic 兼容 API）。你用自然语言下指令，AI 帮你选工具、读输出、写报告。它不是替代你——它是你的渗透副驾驶。
+每个变体都可以加载 **Claude Code**（通过 DeepSeek 的 Anthropic 兼容 API）。你用自然语言下指令，AI 帮你选工具、读输出、写报告。它不替代你——它帮你省掉重复劳动，让你专注在策略和决策上。
 
 ```
 你：帮我看看 dc.corp.local 开了哪些端口，然后告诉我最可能的值守入口
@@ -42,11 +42,11 @@ AI：nmap 发现 88 (Kerberos), 389 (LDAP), 445 (SMB), 636 (LDAPS), 3389 (RDP).
 
 | 能力 | Eidolon | Kali (Docker) | Parrot OS | 自己搭环境 |
 |---|---|---|---|---|
-| **AI 渗透副驾驶** | 内置 Claude Code，自然语言驱动 | 无 | 无 | 无 |
+| **AI 驱动** | 内置 Claude Code，自然语言下指令 | 无 | 无 | 无 |
 | **交互方式** | "帮我审计这个 AD 域" 一句话搞定 | 逐条手动敲命令 | 逐条手动敲命令 | 逐条手动敲命令 |
 | **自动化报告** | AI 读输出 → 整合 → markdown | 无，手工整理 | 无，手工整理 | 无，自己写脚本 |
 | **启动到首次扫描** | **~30s** | 几分钟（拉完还得 apt install） | 几分钟（~4.7GB 镜像） | 半天起步 |
-| **SOCKS 跳板** | 一等公民（`px` 命令透明代理） | 手配 proxychains | 手配 proxychains | 手配 |
+| **SOCKS 跳板** | 内置 `px` 透明代理，开箱即用 | 手配 proxychains | 手配 proxychains | 手配 |
 | **按场景分离** | 7 + 1 个变体，按需拉取 | 1 个大而全镜像 | 单镜像 | 全装一起 |
 | **镜像大小（单变体）** | ~2GB | 基础 46MB，装完膨胀 | ~4.7GB | 不可控 |
 | **非 root 运行** | 是（UID 1001 `ghost` 用户） | 否 | 否 | 通常 root |
@@ -113,7 +113,7 @@ docker-compose exec ad bash
 
 | 变体 | 用途 | AI | 核心工具 |
 |------|------|:--:|----------|
-| **claude** | 🤖 **AI 渗透副驾驶** | ✓ | Claude Code CLI, Node.js 22, 所有 base 工具 |
+| **claude** | AI 渗透（自然语言驱动） | ✓ | Claude Code CLI, Node.js 22, 所有 base 工具 |
 | **web** | Web 应用渗透 | ✓ 可选 | `ffuf`, `gobuster`, `nikto`, `sqlmap`, `nuclei`, `whatweb`, `subfinder`, `katana` |
 | **net** | 网络扫描与隧道 | ✓ 可选 | `nmap`, `masscan`, `tcpdump`, `chisel`, `socat`, `hydra`, `openvpn` |
 | **ad** | Active Directory | ✓ 可选 | `nxc`, `bloodhound-python`, `certipy`, `kerbrute`, `responder`, `impacket` |
